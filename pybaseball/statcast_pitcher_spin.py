@@ -147,6 +147,12 @@ def find_lift_coefficient(df):
 
 
 def find_spin_factor(df):
+    """Function to find spin factor
+
+    Spin Factor formula was derived from a regression of experimental data. The
+    formula below appears in the excel worksheet cited at the top of the file.
+    No explanation is given for the constant values included.
+    """
     df['S'] = (0.166*np.log(0.336/(0.336-df['Cl']))).round(SIG_DIG)
     return df
 
@@ -173,6 +179,17 @@ def find_theta(df):
 
 # HELPERS
 def special_round(series, digit):
+    """Manual rounding function for pd.Series
+
+    pd.round has errors rounding with floating point numbers in some cases. 
+    This function is a workaround for those cases.
+
+    series = (pd.Series) series to be rounded
+    digit = (int) what number of digits to be rounded
+
+    Returns the rounded pd.series
+    """
+
     series = series * 10**digit
     series = np.where(series >= 0, series + .5, series - .5)
     series = series.astype('int64').astype('float64')
