@@ -12,7 +12,6 @@ import pandas as pd
 import numpy as np
 
 K = .005153  # Environmental Constant
-SIG_DIG = 4
 DISTANCE_FROM_HOME_TO_MOUND = 60.5
 DISTANCE_TO_PLATE_AT_VELOCITY_CAPTURE = 50
 Y_VALUE_AT_FINAL_MEASUREMENT = 17/12
@@ -61,7 +60,7 @@ def find_intermediate_values(spin_df):
 
 
 def find_release_point(df):
-    df['yR'] = (DISTANCE_FROM_HOME_TO_MOUND - df['release_extension']).round(SIG_DIG)
+    df['yR'] = (DISTANCE_FROM_HOME_TO_MOUND - df['release_extension'])
     return df
 
 
@@ -71,14 +70,14 @@ def find_release_time(df):
         df['vy0'],
         df['ay'],
         DISTANCE_TO_PLATE_AT_VELOCITY_CAPTURE,
-        False).round(SIG_DIG)
+        False)
     return df
 
 
 def find_release_velocity_components(df):
-    df['vxR'] = (df['vx0'] + (df['ax'] * df['tR'])).round(SIG_DIG)
-    df['vyR'] = (df['vy0'] + (df['ay'] * df['tR'])).round(SIG_DIG)
-    df['vzR'] = (df['vz0'] + (df['az'] * df['tR'])).round(SIG_DIG)
+    df['vxR'] = (df['vx0'] + (df['ax'] * df['tR']))
+    df['vyR'] = (df['vy0'] + (df['ay'] * df['tR']))
+    df['vzR'] = (df['vz0'] + (df['az'] * df['tR']))
     return df
 
 
@@ -88,7 +87,7 @@ def find_flight_time(df):
         df['vyR'],
         df['ay'],
         Y_VALUE_AT_FINAL_MEASUREMENT,
-        True).round(SIG_DIG)
+        True)
     return df
 
 
@@ -97,37 +96,37 @@ def find_average_velocity_components(df):
     df['vybar'] = (2*df['vyR'] + df['ay']*df['tf'])/2
     df['vzbar'] = (2*df['vzR'] + df['az']*df['tf'])/2
 
-    df['vxbar'] = df['vxbar'].round(SIG_DIG)
-    df['vybar'] = df['vybar'].round(SIG_DIG)
-    df['vzbar'] = df['vzbar'].round(SIG_DIG)
+    df['vxbar'] = df['vxbar']
+    df['vybar'] = df['vybar']
+    df['vzbar'] = df['vzbar']
     return df
 
 
 def find_average_velocity(df):
-    df['vbar'] = three_comp_average(df['vxbar'], df['vybar'], df['vzbar']).round(SIG_DIG)
+    df['vbar'] = three_comp_average(df['vxbar'], df['vybar'], df['vzbar'])
     return df
 
 
 def find_average_drag(df):
-    df['adrag'] = (-(df['ax']*df['vxbar'] + df['ay']*df['vybar'] + (df['az'] + GRAVITATIONAL_ACCELERATION)*df['vzbar'])/ df['vbar']).round(SIG_DIG)
+    df['adrag'] = (-(df['ax']*df['vxbar'] + df['ay']*df['vybar'] + (df['az'] + GRAVITATIONAL_ACCELERATION)*df['vzbar'])/ df['vbar'])
     return df
 
 
 def find_magnus_acceleration_magnitude(df):
-    df['amagx'] = (df['ax'] + df['adrag']*df['vxbar']/df['vbar']).round(SIG_DIG)
-    df['amagy'] = (df['ay'] + df['adrag']*df['vybar']/df['vbar']).round(SIG_DIG)
-    df['amagz'] = (df['az'] + df['adrag']*df['vzbar']/df['vbar'] + GRAVITATIONAL_ACCELERATION).round(SIG_DIG)
+    df['amagx'] = (df['ax'] + df['adrag']*df['vxbar']/df['vbar'])
+    df['amagy'] = (df['ay'] + df['adrag']*df['vybar']/df['vbar'])
+    df['amagz'] = (df['az'] + df['adrag']*df['vzbar']/df['vbar'] + GRAVITATIONAL_ACCELERATION)
     return df
 
 
 def find_average_magnus_acceleration(df):
-    df['amag'] = three_comp_average(df['amagx'], df['amagy'], df['amagz']).round(SIG_DIG)
+    df['amag'] = three_comp_average(df['amagx'], df['amagy'], df['amagz'])
     return df
 
 
 def find_magnus_magnitude(df):
-    df['Mx'] = (6 * df['amagx'] * (df['tf']**2)).round(SIG_DIG)
-    df['Mz'] = (6 * df['amagz'] * (df['tf']**2)).round(SIG_DIG)
+    df['Mx'] = (6 * df['amagx'] * (df['tf']**2))
+    df['Mz'] = (6 * df['amagz'] * (df['tf']**2))
     return df
 
 
@@ -142,7 +141,7 @@ def find_phi(df):
 
 
 def find_lift_coefficient(df):
-    df['Cl'] = (df['amag']/(K*df['vbar']**2)).round(SIG_DIG)
+    df['Cl'] = (df['amag']/(K*df['vbar']**2))
     return df
 
 
@@ -153,7 +152,7 @@ def find_spin_factor(df):
     formula below appears in the excel worksheet cited at the top of the file.
     No explanation is given for the constant values included.
     """
-    df['S'] = (0.166*np.log(0.336/(0.336-df['Cl']))).round(SIG_DIG)
+    df['S'] = (0.166*np.log(0.336/(0.336-df['Cl'])))
     return df
 
 
