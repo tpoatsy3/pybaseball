@@ -97,9 +97,9 @@ def find_average_velocity_components(df):
     df['vybar'] = (2*df['vyR'] + df['ay']*df['tf'])/2
     df['vzbar'] = (2*df['vzR'] + df['az']*df['tf'])/2
 
-    df['vxbar'] = df['vxbar'].round(4)
-    df['vybar'] = df['vybar'].round(4)
-    df['vzbar'] = df['vzbar'].round(4)
+    df['vxbar'] = df['vxbar'].round(SIG_DIG)
+    df['vybar'] = df['vybar'].round(SIG_DIG)
+    df['vzbar'] = df['vzbar'].round(SIG_DIG)
     return df
 
 
@@ -109,7 +109,7 @@ def find_average_velocity(df):
 
 
 def find_average_drag(df):
-    df['adrag'] = (-(df['ax']*df['vxbar'] + df['ay']*df['vybar'] + (df['az'] + 32.174)*df['vzbar'])/ df['vbar']).round(SIG_DIG)
+    df['adrag'] = (-(df['ax']*df['vxbar'] + df['ay']*df['vybar'] + (df['az'] + GRAVITATIONAL_ACCELERATION)*df['vzbar'])/ df['vbar']).round(SIG_DIG)
     return df
 
 
@@ -190,7 +190,7 @@ def time_duration(s, v, acc, adj, forward):
         s = (pd.Series) spacial point at known time
         v = (pd.Series) velocity at known time
         acc = (pd.Series) acceleration
-        adj = (pd.Series) spacial difference between known and unknown points
+        adj = (pd.Series) spatial difference between known and unknown points
         forward = (bool) indicating whether space_diff is in the positive or negative y direction
     """
     return (-v - np.sqrt(v**2 - 2*acc*((1 if forward else -1) * (s-adj)))) / acc
